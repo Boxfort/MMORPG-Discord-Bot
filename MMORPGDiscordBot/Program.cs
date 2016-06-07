@@ -10,7 +10,7 @@ namespace MMORPGDiscordBot
     {
         static void Main(string[] args)
         {
-
+            MMORPGDiscordBot bot = new MMORPGDiscordBot();
         }
     }
 }
