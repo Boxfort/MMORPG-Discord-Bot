@@ -16,6 +16,8 @@ namespace MMORPGDiscordBot
     class ItemObject
     {
         public Item item { get; private set; }
-        public int amount { get; private set; }
+        public int amount { get; set; }
+
+        
     }
 }
