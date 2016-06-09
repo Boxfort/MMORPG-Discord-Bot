@@ -13,6 +13,7 @@ namespace MMORPGDiscordBot
         public String gender { get; private set;}
         public Place location { get; private set; }
         public Image playerImage { get; set; }
+        public Inventory inventory { get; private set; }
         public Player(String userName, String gender)
         {
             this.userName = userName;
