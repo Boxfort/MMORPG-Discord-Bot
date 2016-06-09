@@ -12,8 +12,10 @@ namespace MMORPGDiscordBot
 {
     class MMORPGDiscordBot
     {
+        //Creating the discord bot and the list of players
         DiscordClient bot;
         List<Player> players = new List<Player>();
+        //Connecting the bot and waiting for messages to be recieved
         public MMORPGDiscordBot()
         {
             bot = new DiscordClient();
@@ -21,15 +23,18 @@ namespace MMORPGDiscordBot
             bot.MessageReceived += BotMessageRecieved;
             bot.Wait();
         }
-
+        //MessageRecieved event
         private void BotMessageRecieved(object sender, MessageEventArgs e)
         {
+            //Help command
             if (e.Message.Text == "!help")
             {
                 e.Channel.SendMessage("Use !Create USERNAME GENDER then attach a file with your player picture");
             }
+            //Create command
             else if(e.Message.Text.Contains("!Create"))
             {
+                //Get the the userName and gender
                 try
                 {
                     string[] parms = Regex.Split(e.Message.Text.Substring(8), " ");
@@ -46,9 +51,10 @@ namespace MMORPGDiscordBot
                 
             }
         }
-
+        //Creates the new player
         private void CreateNewPlayer(MessageEventArgs e,String[] parms)
         {
+            //Username and gender are entered and then the default player pictured is created
             try
             {
                 String userName = parms[0];
@@ -57,18 +63,14 @@ namespace MMORPGDiscordBot
                 players.Add(newPlayer);
                 e.Channel.SendMessage("Player " + userName + " entered the world");
                 newPlayer.playerImage = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.DefaultPlayer.png"));
-                Image playerImageLoad = newPlayer.displayPlayer();
+                Image playerImageLoad = newPlayer.DisplayPlayer();
                 playerImageLoad.Save("C:\\MyFile2.png");
                 e.Channel.SendFile("C:\\MyFile2.png");
-
-
             }
             catch(Exception exception)
             {
                 Console.WriteLine(exception.ToString());
             }
-            
-
         }
     }
 }

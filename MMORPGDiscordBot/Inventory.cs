@@ -8,9 +8,11 @@ namespace MMORPGDiscordBot
 {
     class Inventory
     {
+        //List of items
         public List<ItemObject> inventory = new List<ItemObject>();
 
-        public ItemObject getItem(ItemObject item)
+        //Gets items based on input
+        public ItemObject GetItem(ItemObject item)
         {
             foreach (var itemFound in inventory)
             {
@@ -21,8 +23,8 @@ namespace MMORPGDiscordBot
             }
             return null;
         }
-
-        public void addItem(ItemObject itemToAdd)
+        //Adds item
+        public void AddItem(ItemObject itemToAdd)
         {
             foreach (var itemFound in inventory)
             {
@@ -32,8 +34,8 @@ namespace MMORPGDiscordBot
                 }
             }
         }
-
-        public void removeItem(ItemObject itemToAdd)
+        //Rmoves item
+        public void RemoveItem(ItemObject itemToAdd)
         {
             foreach (var itemFound in inventory)
             {

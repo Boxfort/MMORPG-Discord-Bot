@@ -17,10 +17,12 @@ namespace MMORPGDiscordBot
 
     static class Location
     {
+        //Three location in game
         public static Bitmap townLocation { get; private set; }
         public static Bitmap forestLocation { get; private set; }
         public static Bitmap mineLocation { get; private set; }
 
+        //Sets location when first instance of class is created
         static Location()
         {
             townLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.town.png"));
@@ -29,7 +31,8 @@ namespace MMORPGDiscordBot
             //mineLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.mine.png"));
         }
 
-        public static Bitmap getLocationImage(Place place)
+        //Return the location image based on place input
+        public static Bitmap GetLocationImage(Place place)
         {
             if (place == Place.Town)
             {
