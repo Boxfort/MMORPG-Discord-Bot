@@ -21,7 +21,7 @@ namespace MMORPGDiscordBot
         public MMORPGDiscordBot()
         {
             bot = new DiscordClient();
-            bot.Connect("mmorpgdiscordbot@gmail.com", "xdmemes");
+            bot.Connect("mmorpgdiscordbot@gmail.com", "adfg12345");
             bot.MessageReceived += BotMessageRecieved;
             bot.Wait();
         }
@@ -65,18 +65,23 @@ namespace MMORPGDiscordBot
                 e.Channel.SendMessage("Player " + userName + " entered the world");
                 newPlayer.playerImage = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.DefaultPlayer.png"));
                 Image playerImageLoad = newPlayer.DisplayPlayer();
-                string outputFileName = "MyFile2.png";
+                string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (!Directory.Exists(path + @"\MMMORPGDicordBot"))
+                {
+                    Directory.CreateDirectory(path + @"\MMMORPGDicordBot");
+                }
+                Directory.CreateDirectory(path + @"\MMMORPGDicordBot\" + userName);
+                string outputFileName = "PlayerPicture.png";
                 using (MemoryStream memory = new MemoryStream())
                 {
-                    using (FileStream fs = new FileStream(@"C:\Folder\" + outputFileName, FileMode.Create, FileAccess.ReadWrite))
+                    using (FileStream fs = new FileStream(path + @"\MMMORPGDicordBot\" + userName + @"\" + outputFileName, FileMode.Create, FileAccess.ReadWrite))
                     {
                         playerImageLoad.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
                         byte[] bytes = memory.ToArray();
                         fs.Write(bytes, 0, bytes.Length);
                     }
                 }
-                e.Channel.SendFile(@"C:\Folder\" + outputFileName);
-                
+                e.Channel.SendFile(path + @"\MMMORPGDicordBot\" + userName + @"\" + outputFileName);
             }
             catch(Exception exception)
             {

@@ -19,6 +19,8 @@ namespace MMORPGDiscordBot
         public Image playerImage {get; set;}
         //The users inventory
         public Inventory inventory {get; private set;}
+        //Players statics
+        public Stats stats {get; private set;}
         
         //Default constructor
         public Player(String userName, String gender)
@@ -27,6 +29,8 @@ namespace MMORPGDiscordBot
             this.gender = gender;
             location = Place.Town;
             playerImage = null;
+            stats.woodCutting = 0;
+            stats.mining = 0;
         }
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
@@ -38,6 +42,10 @@ namespace MMORPGDiscordBot
                 g.DrawImage(Location.GetLocationImage(location), playerImage.Width, 0);
             }
             return bitmap;
+        }
+        private void CreatePlayerJSON()
+        {
+                
         }
     }
 }
