@@ -21,7 +21,7 @@ namespace MMORPGDiscordBot
         public MMORPGDiscordBot()
         {
             bot = new DiscordClient();
-            bot.Connect("mmorpgdiscordbot@gmail.com", "asdf12345");
+            bot.Connect("mmorpgdiscordbot@gmail.com", "xdmemes");
             bot.MessageReceived += BotMessageRecieved;
             bot.Wait();
         }

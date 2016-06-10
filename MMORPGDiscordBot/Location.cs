@@ -27,8 +27,7 @@ namespace MMORPGDiscordBot
         {
             townLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.town.png"));
             forestLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.forest.png"));
-            //Mine is broken for some reason
-            //mineLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.mine.png"));
+            mineLocation = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.mine.png"));
         }
 
         //Return the location image based on place input

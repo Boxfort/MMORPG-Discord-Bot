@@ -96,7 +96,7 @@
   <ItemGroup>
     <EmbeddedResource Include="DefaultPlayer.png" />
     <EmbeddedResource Include="forest.png" />
-    <Content Include="mine.png" />
+    <EmbeddedResource Include="mine.png" />
     <EmbeddedResource Include="town.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
