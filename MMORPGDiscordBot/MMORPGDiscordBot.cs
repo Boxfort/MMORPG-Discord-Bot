@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MMORPGDiscordBot
@@ -48,7 +50,6 @@ namespace MMORPGDiscordBot
                 {
                     e.Channel.SendMessage("Invalid inputs");
                 }
-                
             }
         }
         //Creates the new player
@@ -64,8 +65,18 @@ namespace MMORPGDiscordBot
                 e.Channel.SendMessage("Player " + userName + " entered the world");
                 newPlayer.playerImage = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.DefaultPlayer.png"));
                 Image playerImageLoad = newPlayer.DisplayPlayer();
-                playerImageLoad.Save("C:\\MyFile2.png");
-                e.Channel.SendFile("C:\\MyFile2.png");
+                string outputFileName = "MyFile2.png";
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    using (FileStream fs = new FileStream(@"C:\Folder\" + outputFileName, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        playerImageLoad.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                        byte[] bytes = memory.ToArray();
+                        fs.Write(bytes, 0, bytes.Length);
+                    }
+                }
+                e.Channel.SendFile(@"C:\Folder\" + outputFileName);
+                
             }
             catch(Exception exception)
             {

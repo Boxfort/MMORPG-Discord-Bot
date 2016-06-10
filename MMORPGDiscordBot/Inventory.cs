@@ -23,6 +23,7 @@ namespace MMORPGDiscordBot
             }
             return null;
         }
+
         //Adds item
         public void AddItem(ItemObject itemToAdd)
         {
@@ -34,6 +35,7 @@ namespace MMORPGDiscordBot
                 }
             }
         }
+
         //Rmoves item
         public void RemoveItem(ItemObject itemToAdd)
         {

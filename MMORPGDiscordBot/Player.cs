@@ -29,7 +29,7 @@ namespace MMORPGDiscordBot
             playerImage = null;
         }
         //Displays the player by command the player's image and their location
-        public Image DisplayPlayer()
+        public Bitmap DisplayPlayer()
         {
             Bitmap bitmap = new Bitmap(playerImage.Width + Location.GetLocationImage(location).Width, Math.Max(playerImage.Height, Location.GetLocationImage(location).Height));
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -37,7 +37,7 @@ namespace MMORPGDiscordBot
                 g.DrawImage(playerImage, 0, 0);
                 g.DrawImage(Location.GetLocationImage(location), playerImage.Width, 0);
             }
-            return (Image)bitmap;
+            return bitmap;
         }
     }
 }
