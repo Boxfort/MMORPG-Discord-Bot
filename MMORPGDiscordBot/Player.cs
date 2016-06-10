@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace MMORPGDiscordBot
 {
@@ -19,8 +20,11 @@ namespace MMORPGDiscordBot
         public Image playerImage {get; set;}
         //The users inventory
         public Inventory inventory {get; private set;}
-        //Players statics
-        public Stats stats {get; private set;}
+        //Woodcutting
+        public float woodCutting {get; private set;}
+        //Mining
+        public float mining {get; private set;}
+
         
         //Default constructor
         public Player(String userName, String gender)
@@ -29,8 +33,9 @@ namespace MMORPGDiscordBot
             this.gender = gender;
             location = Place.Town;
             playerImage = null;
-            stats.woodCutting = 0;
-            stats.mining = 0;
+            woodCutting = 0;
+            mining = 0;
+            CreatePlayerJSON();
         }
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
@@ -45,7 +50,11 @@ namespace MMORPGDiscordBot
         }
         private void CreatePlayerJSON()
         {
-                
+            List<Player> data = new List<Player>();
+            data.Add(this);
+            String json = JsonConvert.SerializeObject(data.ToArray());
+            string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "player.txt", json);
         }
     }
 }
