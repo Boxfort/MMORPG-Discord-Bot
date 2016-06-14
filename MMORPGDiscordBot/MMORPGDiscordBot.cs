@@ -89,5 +89,10 @@ namespace MMORPGDiscordBot
                 Console.WriteLine(exception.ToString());
             }
         }
+
+        private void LoadPlayerData()
+        {
+            //Too be implmeneted
+        }
     }
 }
