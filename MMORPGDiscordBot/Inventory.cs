@@ -33,6 +33,10 @@ namespace MMORPGDiscordBot
                 {
                     itemFound.amount += itemToAdd.amount;
                 }
+                else
+                {
+                    inventory.Add(itemFound);
+                }
             }
         }
 
