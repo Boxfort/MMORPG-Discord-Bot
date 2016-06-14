@@ -50,11 +50,18 @@ namespace MMORPGDiscordBot
         }
         private void CreatePlayerJSON()
         {
-            List<Player> data = new List<Player>();
-            data.Add(this);
-            String json = JsonConvert.SerializeObject(data.ToArray());
+            Dictionary<string, string> playerDic = new Dictionary<string, string>();
+            Dictionary<string, string> inventoryDic = new Dictionary<string, string>();
+            playerDic.Add("userName", userName);
+            playerDic.Add("gender", gender);
+            playerDic.Add("location", location.ToString());
+            playerDic.Add("woodCutting", woodCutting.ToString());
+            playerDic.Add("mining", mining.ToString());
+            String playerJson = JsonConvert.SerializeObject(playerDic);
+            String inventoryJson = JsonConvert.SerializeObject(inventoryDic);
             string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "player.txt", json);
+            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "player.txt", playerJson);
+            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "inventory.txt", inventoryJson);
         }
     }
 }

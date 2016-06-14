@@ -17,9 +17,11 @@ namespace MMORPGDiscordBot
         //Creating the discord bot and the list of players
         DiscordClient bot;
         List<Player> players = new List<Player>();
+        string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         //Connecting the bot and waiting for messages to be recieved
         public MMORPGDiscordBot()
         {
+
             bot = new DiscordClient();
             bot.Connect("mmorpgdiscordbot@gmail.com", "");
             bot.MessageReceived += BotMessageRecieved;
@@ -65,7 +67,6 @@ namespace MMORPGDiscordBot
                 e.Channel.SendMessage("Player " + userName + " entered the world");
                 newPlayer.playerImage = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.DefaultPlayer.png"));
                 Image playerImageLoad = newPlayer.DisplayPlayer();
-                string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (!Directory.Exists(path + @"\MMMORPGDicordBot"))
                 {
                     Directory.CreateDirectory(path + @"\MMMORPGDicordBot");
