@@ -27,28 +27,40 @@ namespace MMORPGDiscordBot
         //Adds item
         public void AddItem(ItemObject itemToAdd)
         {
-            foreach (var itemFound in inventory)
+            ItemObject newItem = DoesInventoryHaveItem(itemToAdd);
+            if (newItem != null)
             {
-                if (itemFound == itemToAdd)
+                newItem.amount++;
+            }
+            else
+            {
+                inventory.Add(itemToAdd);
+            }
+        }
+
+        public ItemObject DoesInventoryHaveItem(ItemObject itemToCheck)
+        {
+            foreach (var item in inventory)
+            {
+                if (item == itemToCheck)
                 {
-                    itemFound.amount += itemToAdd.amount;
-                }
-                else
-                {
-                    inventory.Add(itemFound);
+                    return item;
                 }
             }
+            return null;
         }
 
         //Rmoves item
         public void RemoveItem(ItemObject itemToAdd)
         {
-            foreach (var itemFound in inventory)
+            ItemObject newItem = DoesInventoryHaveItem(itemToAdd);
+            if (newItem != null)
             {
-                if (itemFound == itemToAdd)
-                {
-                    itemFound.amount -= itemToAdd.amount;
-                }
+                newItem.amount--;
+            }
+            else
+            {
+                inventory.Add(itemToAdd);
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace MMORPGDiscordBot
 {
@@ -19,7 +20,7 @@ namespace MMORPGDiscordBot
         //The users player image
         public Image playerImage {get; set;}
         //The users inventory
-        public Inventory inventory {get; private set;}
+        public Inventory inventory {get; set;}
         //Woodcutting
         public float woodCutting {get; private set;}
         //Mining
@@ -27,16 +28,29 @@ namespace MMORPGDiscordBot
 
         
         //Default constructor
-        public Player(String userName, String gender)
+        public Player(string userName, string gender,Place location,Image playerImage, float woodCutting, float mining,bool newPlayer)
         {
             this.userName = userName;
             this.gender = gender;
             location = Place.Town;
             playerImage = null;
+            inventory = new Inventory();
             woodCutting = 0;
             mining = 0;
             CreatePlayerJSON();
         }
+        public Player(string userName, string gender, Place location, Image playerImage, float woodCutting, float mining)
+        {
+            this.userName = userName;
+            this.gender = gender;
+            this.location = location;
+            inventory = new Inventory();
+            this.playerImage = playerImage;
+            this.woodCutting = woodCutting;
+            this.mining = mining;
+        }
+        
+
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
         {
@@ -52,16 +66,23 @@ namespace MMORPGDiscordBot
         {
             Dictionary<string, string> playerDic = new Dictionary<string, string>();
             Dictionary<string, string> inventoryDic = new Dictionary<string, string>();
+            inventory.AddItem(new ItemObject(Item.Wood, 10));
             playerDic.Add("userName", userName);
             playerDic.Add("gender", gender);
             playerDic.Add("location", location.ToString());
             playerDic.Add("woodCutting", woodCutting.ToString());
             playerDic.Add("mining", mining.ToString());
+            foreach (ItemObject item in inventory.inventory)
+            {
+                inventoryDic.Add(item.item.ToString(), item.amount.ToString());
+            }
+            Console.WriteLine(inventoryDic.Count);
             String playerJson = JsonConvert.SerializeObject(playerDic);
             String inventoryJson = JsonConvert.SerializeObject(inventoryDic);
             string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "player.txt", playerJson);
-            System.IO.File.WriteAllText(path + @"\MMMORPGDicordBot\" + userName + @"\" + "inventory.txt", inventoryJson);
+            Directory.CreateDirectory(path + @"\MMORPGDicordBot\" + userName);
+            System.IO.File.WriteAllText(path + @"\MMORPGDicordBot\" + userName + @"\" + "player.json", playerJson);
+            System.IO.File.WriteAllText(path + @"\MMORPGDicordBot\" + userName + @"\" + "inventory.json", inventoryJson);
         }
     }
 }

@@ -11,12 +11,36 @@ namespace MMORPGDiscordBot
     {
         Wood,
         Ore,
-        Gold
+        Gold,
+        Null
     }
     //Item object
     class ItemObject
     {
+        public ItemObject(Item item, int amount)
+        {
+            this.item = item;
+            this.amount = amount;
+        }
+
         public Item item { get; private set; }
         public int amount { get; set; }
+
+        public static Item GetItemTypeByString(string input)
+        {
+            if (input.Contains("Wood"))
+            {
+                return Item.Wood;
+            }
+            else if (input.Contains("Ore"))
+            {
+                return Item.Ore;
+            }
+            else if (input.Contains("Gold"))
+            {
+                return Item.Gold;
+            }
+            return Item.Null;
+        }
     }
 }

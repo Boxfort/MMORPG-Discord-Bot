@@ -48,6 +48,21 @@ namespace MMORPGDiscordBot
             return null;
         }
 
-        
+        public static Place getLocationByString(string input)
+        {
+            if (input.Contains("town"))
+            {
+                return Place.Town;
+            }
+            else if (input.Contains("forest"))
+            {
+                return Place.Forest;
+            }
+            else if (input.Contains("mine"))
+            {
+                return Place.Mine;
+            }
+            return Place.Town;
+        }
     }
 }
