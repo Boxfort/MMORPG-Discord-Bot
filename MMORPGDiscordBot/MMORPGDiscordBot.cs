@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MMORPGDiscordBot
 {
@@ -23,8 +24,12 @@ namespace MMORPGDiscordBot
         //Connecting the bot and waiting for messages to be recieved
         public MMORPGDiscordBot()
         {
-            String[] dirs = Directory.GetDirectories(path + @"\MMORPGDicordBot");
-            if(dirs.Length != 0)
+            System.Timers.Timer timer = new System.Timers.Timer(3000);
+            timer.Elapsed += async (sender, e) => HandleTimer();
+            timer.Start();
+
+            var dirs = Directory.GetDirectories(path + @"\MMORPGDicordBot");
+            if (dirs.Length != 0)
             {
                 Console.WriteLine(dirs.Length);
                 LoadPlayerData();
@@ -34,34 +39,63 @@ namespace MMORPGDiscordBot
             bot.MessageReceived += BotMessageRecieved;
             bot.Wait();
         }
+
+        private void HandleTimer()
+        {
+            foreach (Player player in players)
+            {
+                player.Update();
+            }
+        }
         //MessageRecieved event
         private void BotMessageRecieved(object sender, MessageEventArgs e)
         {
-            //Help command
-            if (e.Message.Text == "!help")
+            if(e.Message.Text.Contains("!help"))
             {
                 e.Channel.SendMessage("Use !Create USERNAME GENDER then attach a file with your player picture");
             }
-            //Create command
-            else if(e.Message.Text.Contains("!Create"))
+            if (e.Message.Text.Contains("!create"))
             {
-                //Get the the userName and gender
                 try
                 {
-                    string[] parms = Regex.Split(e.Message.Text.Substring(8), " ");
-                    if(parms.Length != 2)
+                    var parms = Regex.Split(e.Message.Text.Substring(8), " ");
+                    if (parms.Length != 2)
                     {
                         throw new Exception();
                     }
-                    if(CheckIfPlayerExist(parms[0]))
+                    if (CheckIfPlayerExist(parms[0]))
                     {
                         throw new Exception();
                     }
                     CreateNewPlayer(e, parms);
                 }
-                catch
+                catch (Exception)
                 {
                     e.Channel.SendMessage("Invalid inputs or this player already exists");
+                }
+            }
+            if (e.Message.Text.Contains("!display"))
+            {
+                try
+                {
+                    var parms = Regex.Split(e.Message.Text.Substring(9), " ");
+                    if (parms.Length != 1)
+                    {
+                        throw new Exception();
+                    }
+                    if (CheckIfPlayerExist(parms[0]))
+                    {
+                        DisplayPlayerStats(parms[0], e);
+                        Console.WriteLine("dumb uck");
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception)
+                {
+                    e.Channel.SendMessage("Invalid inputs or this player does not exist");
                 }
             }
         }
@@ -71,8 +105,8 @@ namespace MMORPGDiscordBot
             //Username and gender are entered and then the default player pictured is created
             try
             {
-                String userName = parms[0];
-                String gender = parms[1];
+                string userName = parms[0];
+                string gender = parms[1];
                 Player newPlayer = new Player(userName, gender, Place.Town, null, 0, 0,true);
                 players.Add(newPlayer);
                 e.Channel.SendMessage("Player " + userName + " entered the world");
@@ -154,6 +188,33 @@ namespace MMORPGDiscordBot
                 }
             }
         }
+
+        private void DisplayPlayerStats(string userName, MessageEventArgs e)
+        {
+            Console.WriteLine(userName);
+            Player player = GetPlayerByUserName(userName);
+            Console.WriteLine(player.userName);
+            e.Channel.SendMessage("UserName: "+ player.userName);
+            e.Channel.SendMessage("Gender: " + player.gender);
+            e.Channel.SendMessage("Location: " +player.location.ToString());
+            e.Channel.SendMessage("Woodcutting: " +player.woodCutting.ToString());
+            e.Channel.SendMessage("Mining: " +player.mining.ToString());
+            Image playerImage = player.DisplayPlayer();
+            e.Channel.SendFile(path + @"\MMORPGDicordBot\" + userName + @"\" + "PlayerPicture.png");
+        }
+
+        private Player GetPlayerByUserName(string userName)
+        {
+            foreach (Player player in players)
+            {
+                if (player.userName == userName)
+                {
+                    return player;
+                }
+            }
+            return null;
+        }
+
         //A function to check if a player already exists
         private Boolean CheckIfPlayerExist(string userName)
         {

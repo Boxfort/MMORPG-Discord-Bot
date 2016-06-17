@@ -23,8 +23,12 @@ namespace MMORPGDiscordBot
         public Inventory inventory {get; set;}
         //Woodcutting
         public float woodCutting {get; private set;}
+        public int woodCuttingLevel { get; private set; }
         //Mining
         public float mining {get; private set;}
+        public int miningLevel { get; private set; }
+        //Player action
+        public Action action { get; set; }
 
         
         //Default constructor
@@ -37,6 +41,7 @@ namespace MMORPGDiscordBot
             inventory = new Inventory();
             woodCutting = 0;
             mining = 0;
+            this.action = Action.Nothing;
             CreatePlayerJSON();
         }
         public Player(string userName, string gender, Place location, Image playerImage, float woodCutting, float mining)
@@ -48,9 +53,33 @@ namespace MMORPGDiscordBot
             this.playerImage = playerImage;
             this.woodCutting = woodCutting;
             this.mining = mining;
+            this.action = Action.Nothing;
         }
-        
 
+        //Updates the player action
+        public void Update()
+        {
+            if (action == Action.Mining)
+            {
+                mining += 0.1f;
+            }
+            else if (action == Action.WoodCutting)
+            {
+                woodCutting += 0.1f;
+            }
+
+            if(mining >= 10)
+            {
+                mining = 0;
+                miningLevel++;
+            }
+            else if(woodCutting >= 10)
+            {
+                woodCutting = 0;
+                woodCuttingLevel++;
+            }
+            Console.WriteLine("updated");
+        }
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
         {
