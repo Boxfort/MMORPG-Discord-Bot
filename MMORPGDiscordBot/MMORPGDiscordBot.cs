@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -52,11 +53,15 @@ namespace MMORPGDiscordBot
                     {
                         throw new Exception();
                     }
+                    if(CheckIfPlayerExist(parms[0]))
+                    {
+                        throw new Exception();
+                    }
                     CreateNewPlayer(e, parms);
                 }
                 catch
                 {
-                    e.Channel.SendMessage("Invalid inputs");
+                    e.Channel.SendMessage("Invalid inputs or this player already exists");
                 }
             }
         }
@@ -99,11 +104,10 @@ namespace MMORPGDiscordBot
         private void LoadPlayerData()
         {
             String[] dirs = Directory.GetDirectories(path + @"\MMORPGDicordBot");
-            
             Player newPlayer;
             Inventory playerInventory = new Inventory();
             Image playerImage = null;
-            JObject jObject;
+            JToken jToken;
             string userName = "";
             string gender = "";
             string location = "";
@@ -118,20 +122,20 @@ namespace MMORPGDiscordBot
                     {
                         playerImage = Image.FromFile(file);
                     }
-                    else if (file.Contains("player.txt"))
+                    else if (file.Contains("player.json"))
                     {
-                        Console.WriteLine(file);
-                        jObject = JObject.Parse(file);
-                        userName = jObject["userName"].ToString();
-                        gender = jObject["gender"].ToString();
-                        location = jObject["location"].ToString();
-                        woodCutting = jObject["woodCutting"].ToString();
-                        mining = jObject["mining"].ToString();
+                        string text = System.IO.File.ReadAllText(file);
+                        jToken = JsonConvert.DeserializeObject<JToken>(text);
+                        userName = jToken.SelectToken("userName").ToString();
+                        gender = jToken.SelectToken("gender").ToString();
+                        location = jToken.SelectToken("userName").ToString();
+                        woodCutting = jToken.SelectToken("woodCutting").ToString();
+                        mining = jToken.SelectToken("mining").ToString();
                     }
                     else if (files.Contains("inventory"))
                     {
-                        jObject = JObject.Parse(file);
-                        JArray jArray = JArray.FromObject(jObject);
+                        jToken = JObject.Parse(file);
+                        JArray jArray = JArray.FromObject(jToken);
                         foreach (JObject content in jArray)
                         {
                             foreach (JProperty item in content.Properties())
@@ -143,7 +147,24 @@ namespace MMORPGDiscordBot
                 }
                 newPlayer = new Player(userName,gender,Location.getLocationByString(location),playerImage,0,0);
                 newPlayer.inventory = playerInventory;
+                players.Add(newPlayer);
+                foreach (Player player in players)
+                {
+                    Console.WriteLine(player.gender);
+                }
             }
+        }
+        //A function to check if a player already exists
+        private Boolean CheckIfPlayerExist(string userName)
+        {
+            foreach (Player player in players)
+            {
+                if (player.userName == userName)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

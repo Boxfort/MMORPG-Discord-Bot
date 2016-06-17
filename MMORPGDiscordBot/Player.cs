@@ -77,8 +77,8 @@ namespace MMORPGDiscordBot
                 inventoryDic.Add(item.item.ToString(), item.amount.ToString());
             }
             Console.WriteLine(inventoryDic.Count);
-            String playerJson = JsonConvert.SerializeObject(playerDic);
-            String inventoryJson = JsonConvert.SerializeObject(inventoryDic);
+            String playerJson = JsonConvert.SerializeObject(playerDic,Formatting.Indented);
+            String inventoryJson = JsonConvert.SerializeObject(inventoryDic, Formatting.Indented);
             string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             Directory.CreateDirectory(path + @"\MMORPGDicordBot\" + userName);
             System.IO.File.WriteAllText(path + @"\MMORPGDicordBot\" + userName + @"\" + "player.json", playerJson);
