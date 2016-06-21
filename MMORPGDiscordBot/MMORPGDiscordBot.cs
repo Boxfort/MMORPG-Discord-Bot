@@ -35,7 +35,7 @@ namespace MMORPGDiscordBot
                 LoadPlayerData();
             }
             bot = new DiscordClient();
-            bot.Connect("mmorpgdiscordbot@gmail.com", "");
+            bot.Connect("mmorpgdiscordbot@gmail.com","");
             bot.MessageReceived += BotMessageRecieved;
             bot.Wait();
         }
@@ -54,6 +54,7 @@ namespace MMORPGDiscordBot
             {
                 e.Channel.SendMessage("Use !Create USERNAME GENDER then attach a file with your player picture");
             }
+
             if (e.Message.Text.Contains("!create"))
             {
                 try
@@ -71,9 +72,10 @@ namespace MMORPGDiscordBot
                 }
                 catch (Exception)
                 {
-                    e.Channel.SendMessage("Invalid inputs or this player already exists");
+                    e.Channel.SendMessage(e.ToString());
                 }
             }
+
             if (e.Message.Text.Contains("!display"))
             {
                 try
@@ -86,7 +88,62 @@ namespace MMORPGDiscordBot
                     if (CheckIfPlayerExist(parms[0]))
                     {
                         DisplayPlayerStats(parms[0], e);
-                        Console.WriteLine("dumb uck");
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception)
+                {
+                    e.Channel.SendMessage("Invalid inputs or this player does not exist");
+                }
+            }
+
+            if(e.Message.Text.Contains("!mine"))
+            {
+                try
+                {
+                    var parms = Regex.Split(e.Message.Text.Substring(6), " ");
+                    if (parms.Length != 1)
+                    {
+                        throw new Exception();
+                    }
+                    if (CheckIfPlayerExist(parms[0]))
+                    {
+                        GetPlayerByUserName(parms[0]).action = Action.Mining;
+                        GetPlayerByUserName(parms[0]).location = Place.Mine;
+                        Image newImage = GetPlayerByUserName(parms[0]).DisplayPlayer();
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    e.Channel.SendMessage(ex.ToString());
+                }
+            }
+
+            if (e.Message.Text.Contains("!chop"))
+            {
+                try
+                {
+                    var parms = Regex.Split(e.Message.Text.Substring(6), " ");
+                    if(CheckIfPlayerExist(parms[0]))
+                    {
+                        Console.WriteLine("does that exist");
+                    }
+                    if (parms.Length != 1)
+                    {
+                        throw new Exception();
+                    }
+                    if (CheckIfPlayerExist(parms[0]))
+                    {
+                        GetPlayerByUserName(parms[0]).action = Action.WoodCutting;
+                        GetPlayerByUserName(parms[0]).location = Place.Forest;
+                        Image newImage = GetPlayerByUserName(parms[0]).DisplayPlayer();
                     }
                     else
                     {
@@ -127,6 +184,7 @@ namespace MMORPGDiscordBot
                         fs.Write(bytes, 0, bytes.Length);
                     }
                 }
+                
                 e.Channel.SendFile(path + @"\MMORPGDicordBot\" + userName + @"\" + outputFileName);
             }
             catch(Exception exception)
@@ -199,7 +257,6 @@ namespace MMORPGDiscordBot
             e.Channel.SendMessage("Location: " +player.location.ToString());
             e.Channel.SendMessage("Woodcutting: " +player.woodCutting.ToString());
             e.Channel.SendMessage("Mining: " +player.mining.ToString());
-            Image playerImage = player.DisplayPlayer();
             e.Channel.SendFile(path + @"\MMORPGDicordBot\" + userName + @"\" + "PlayerPicture.png");
         }
 

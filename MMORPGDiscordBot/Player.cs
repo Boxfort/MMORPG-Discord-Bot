@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Newtonsoft.Json;
 using System.IO;
+using System.Threading;
+using System.Reflection;
 
 namespace MMORPGDiscordBot
 {
@@ -16,7 +18,7 @@ namespace MMORPGDiscordBot
         //Gender(Decided by the user)
         public String gender {get; private set;}
         //Location the player is in
-        public Place location {get; private set;}
+        public Place location {get; set;}
         //The users player image
         public Image playerImage {get; set;}
         //The users inventory
@@ -83,13 +85,31 @@ namespace MMORPGDiscordBot
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
         {
-            Bitmap bitmap = new Bitmap(playerImage.Width + Location.GetLocationImage(location).Width, Math.Max(playerImage.Height, Location.GetLocationImage(location).Height));
-            using (Graphics g = Graphics.FromImage(bitmap))
+            try
             {
-                g.DrawImage(playerImage, 0, 0);
-                g.DrawImage(Location.GetLocationImage(location), playerImage.Width, 0);
+                string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string outputFileName = "PlayerPicture.png";
+                playerImage = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("MMORPGDiscordBot.DefaultPlayer.png"));
+                Bitmap bitmap = new Bitmap(playerImage.Width + Location.GetLocationImage(location).Width, Math.Max(playerImage.Height, Location.GetLocationImage(location).Height));
+                Graphics g;
+                Console.WriteLine("made it");
+                using (g = Graphics.FromImage(bitmap))
+                {
+                    g.DrawImage(playerImage, 0, 0);
+                    g.DrawImage(Location.GetLocationImage(location), playerImage.Width, 0);
+                }
+                playerImage.Dispose();
+                File.Delete(path + @"\MMORPGDicordBot\" + userName + @"\" + outputFileName);
+                bitmap.Save(path + @"\MMORPGDicordBot\" + userName + @"\" + outputFileName);
+                return bitmap;
             }
-            return bitmap;
+            
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+
         }
         private void CreatePlayerJSON()
         {
