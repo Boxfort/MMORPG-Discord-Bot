@@ -213,6 +213,7 @@ namespace MMORPGDiscordBot
                     if (file.Contains("Picture"))
                     {
                         playerImage = Image.FromFile(file);
+                        playerImage.Dispose();
                     }
                     else if (file.Contains("player.json"))
                     {
