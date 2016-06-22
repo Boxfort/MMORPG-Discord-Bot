@@ -221,7 +221,7 @@ namespace MMORPGDiscordBot
                         jToken = JsonConvert.DeserializeObject<JToken>(text);
                         userName = jToken.SelectToken("userName").ToString();
                         gender = jToken.SelectToken("gender").ToString();
-                        location = jToken.SelectToken("userName").ToString();
+                        location = jToken.SelectToken("location").ToString();
                         woodCutting = jToken.SelectToken("woodCutting").ToString();
                         mining = jToken.SelectToken("mining").ToString();
                     }
@@ -238,7 +238,7 @@ namespace MMORPGDiscordBot
                         }
                     }
                 }
-                newPlayer = new Player(userName,gender,Location.getLocationByString(location),playerImage,0,0);
+                newPlayer = new Player(userName,gender,Location.getLocationByString(location),playerImage,(float)Convert.ToDecimal(woodCutting),(float)Convert.ToDecimal(mining));
                 newPlayer.inventory = playerInventory;
                 players.Add(newPlayer);
                 foreach (Player player in players)

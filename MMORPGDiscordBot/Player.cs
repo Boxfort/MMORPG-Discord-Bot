@@ -80,6 +80,7 @@ namespace MMORPGDiscordBot
                 woodCutting = 0;
                 woodCuttingLevel++;
             }
+            CreatePlayerJSON();
             Console.WriteLine("updated");
         }
         //Displays the player by command the player's image and their location
@@ -111,7 +112,7 @@ namespace MMORPGDiscordBot
             }
 
         }
-        private void CreatePlayerJSON()
+        public void CreatePlayerJSON()
         {
             Dictionary<string, string> playerDic = new Dictionary<string, string>();
             Dictionary<string, string> inventoryDic = new Dictionary<string, string>();
@@ -121,9 +122,10 @@ namespace MMORPGDiscordBot
             playerDic.Add("location", location.ToString());
             playerDic.Add("woodCutting", woodCutting.ToString());
             playerDic.Add("mining", mining.ToString());
+            inventory.inventory.Clear();
             foreach (ItemObject item in inventory.inventory)
             {
-                inventoryDic.Add(item.item.ToString(), item.amount.ToString());
+                    inventoryDic.Add(item.item.ToString(), item.amount.ToString());
             }
             Console.WriteLine(inventoryDic.Count);
             String playerJson = JsonConvert.SerializeObject(playerDic,Formatting.Indented);
