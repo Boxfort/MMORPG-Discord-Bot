@@ -31,10 +31,12 @@ namespace MMORPGDiscordBot
         public int miningLevel { get; private set; }
         //Player action
         public Action action { get; set; }
+        //Player ID
+        public ulong id { get; set; }
 
         
         //Default constructor
-        public Player(string userName, string gender,Place location,Image playerImage, float woodCutting, float mining,bool newPlayer)
+        public Player(string userName, string gender,Place location,Image playerImage, float woodCutting, float mining, Action action, ulong playerID, bool newPlayer)
         {
             this.userName = userName;
             this.gender = gender;
@@ -43,10 +45,12 @@ namespace MMORPGDiscordBot
             inventory = new Inventory();
             woodCutting = 0;
             mining = 0;
-            this.action = Action.Nothing;
+            this.action = action;
+            this.id = playerID;
             CreatePlayerJSON();
         }
-        public Player(string userName, string gender, Place location, Image playerImage, float woodCutting, float mining)
+        //Default constructor for non newPlayers
+        public Player(string userName, string gender, Place location, Image playerImage, float woodCutting, float mining, Action action, ulong playerID)
         {
             this.userName = userName;
             this.gender = gender;
@@ -55,7 +59,9 @@ namespace MMORPGDiscordBot
             this.playerImage = playerImage;
             this.woodCutting = woodCutting;
             this.mining = mining;
-            this.action = Action.Nothing;
+            this.action = action;
+            this.action = action;
+            this.id = playerID;
         }
 
         //Updates the player action
@@ -63,26 +69,16 @@ namespace MMORPGDiscordBot
         {
             if (action == Action.Mining)
             {
-                mining += 0.1f;
+                mining += 1f;
             }
             else if (action == Action.WoodCutting)
             {
-                woodCutting += 0.1f;
-            }
-
-            if(mining >= 10)
-            {
-                mining = 0;
-                miningLevel++;
-            }
-            else if(woodCutting >= 10)
-            {
-                woodCutting = 0;
-                woodCuttingLevel++;
+                woodCutting += 1f;
             }
             CreatePlayerJSON();
             Console.WriteLine("updated");
         }
+
         //Displays the player by command the player's image and their location
         public Bitmap DisplayPlayer()
         {
@@ -112,6 +108,8 @@ namespace MMORPGDiscordBot
             }
 
         }
+
+        //Create player data
         public void CreatePlayerJSON()
         {
             Dictionary<string, string> playerDic = new Dictionary<string, string>();
@@ -122,6 +120,8 @@ namespace MMORPGDiscordBot
             playerDic.Add("location", location.ToString());
             playerDic.Add("woodCutting", woodCutting.ToString());
             playerDic.Add("mining", mining.ToString());
+            playerDic.Add("action", action.ToString());
+            playerDic.Add("playerId", id.ToString());
             inventory.inventory.Clear();
             foreach (ItemObject item in inventory.inventory)
             {

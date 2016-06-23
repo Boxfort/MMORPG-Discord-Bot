@@ -48,6 +48,7 @@ namespace MMORPGDiscordBot
             return null;
         }
 
+        //Return location by string
         public static Place getLocationByString(string input)
         {
             if (input.Contains("town"))
