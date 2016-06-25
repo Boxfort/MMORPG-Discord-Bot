@@ -68,6 +68,7 @@ namespace MMORPGDiscordBot
                         + "!create USERNAME GENDER\n"
                         + "!chop USERNAME\n"
                         + "!mine USERNAME\n"
+                        + "!display \n"
                         + "!display USERNAME\n"
                         + "```");
                 }
