@@ -98,7 +98,7 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                        var parms = Regex.Split(e.Message.Text.Substring(8), " ");
+                        var parms = Regex.Split(e.Message.Text.Substring(9), " ");
                         if (parms.Length == 0)
                         {
                             DisplayPlayerStats(e);
@@ -160,6 +160,17 @@ namespace MMORPGDiscordBot
                         e.Channel.SendMessage("Invalid inputs or this player does not exist");
                     }
                 }
+                //Move command
+                if(e.Message.Text.Contains("!move"))
+                {
+                    try
+                    {
+
+                    }
+                    catch
+                    {
+
+                    }
             }
         }
         //Creates the new player
