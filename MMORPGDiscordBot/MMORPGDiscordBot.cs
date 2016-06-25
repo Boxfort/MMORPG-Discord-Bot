@@ -193,7 +193,7 @@ namespace MMORPGDiscordBot
                             {
                                 if (parms[0].ToLower().Contains("forest"))
                                 {
-                                    if (GetPlayerById(e.User.Id).location != Location.forestLocation)
+                                    if (GetPlayerById(e.User.Id).location != Place.Forest)
                                     {
                                         e.Channel.SendMessage(GetPlayerById(e.User.Id).userName + " moved to the forest.");
                                     }
@@ -202,7 +202,7 @@ namespace MMORPGDiscordBot
                                 }
                                 else if (parms[0].ToLower().Contains("mine"))
                                 {
-                                    if (GetPlayerById(e.User.Id).location != Location.mineLocation)
+                                    if (GetPlayerById(e.User.Id).location != Place.Mine)
                                     {
                                         e.Channel.SendMessage(GetPlayerById(e.User.Id).userName + " moved to the mine.");
                                     }
@@ -211,7 +211,7 @@ namespace MMORPGDiscordBot
                                 }
                                 else if (parms[0].ToLower().Contains("town"))
                                 {
-                                    if (GetPlayerById(e.User.Id).location != Location.townLocation)
+                                    if (GetPlayerById(e.User.Id).location != Place.Town)
                                     {
                                         e.Channel.SendMessage(GetPlayerById(e.User.Id).userName + " moved to the town.");
                                     }
@@ -238,7 +238,7 @@ namespace MMORPGDiscordBot
                         var parms = Regex.Split(e.Message.Text.Substring(7), " ");
                         if (parms.Length == 1)
                         {
-                            if(GetPlayerByUserName(parms[0]) != null)
+                            if (GetPlayerByUserName(parms[0]) != null)
                             {
                                 //TODO: Deal damage to players
                                 e.Channel.SendMessage(GetPlayerById(e.User.Id).userName + " attacks " + GetPlayerByUserName(parms[0]).userName);
@@ -249,10 +249,11 @@ namespace MMORPGDiscordBot
                             }
                         }
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         e.Channel.SendMessage("Invalid inputs.");
                     }
+                }
             }
         }
 
