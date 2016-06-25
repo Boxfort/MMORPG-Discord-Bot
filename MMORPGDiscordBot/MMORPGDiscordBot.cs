@@ -81,7 +81,7 @@ namespace MMORPGDiscordBot
                         {
                             throw new Exception();
                         }
-                        if (CheckIfPlayerExist(parms[0]))
+                        if (CheckIfPlayerExist(e.User.Id))
                         {
                             throw new Exception();
                         }
@@ -97,19 +97,7 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                        var parms = Regex.Split(e.Message.Text.Substring(9), " ");
-                        if (parms.Length != 1)
-                        {
-                            throw new Exception();
-                        }
-                        if (CheckIfPlayerExist(parms[0]))
-                        {
-                            DisplayPlayerStats(parms[0], e);
-                        }
-                        else
-                        {
-                            throw new Exception();
-                        }
+                        DisplayPlayerStats(e);
                     }
                     catch (Exception)
                     {
@@ -121,25 +109,20 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                        var parms = Regex.Split(e.Message.Text.Substring(6), " ");
-                        if (parms.Length != 1)
+                        if (CheckIfPlayerExist(e.User.Id))
                         {
-                            throw new Exception();
-                        }
-                        if (CheckIfPlayerExist(parms[0]))
-                        {
-                            GetPlayerByUserName(parms[0]).action = Action.Mining;
-                            GetPlayerByUserName(parms[0]).location = Place.Mine;
-                            Image newImage = GetPlayerByUserName(parms[0]).DisplayPlayer();
+                            GetPlayerById(e.User.Id).action = Action.Mining;
+                            GetPlayerById(e.User.Id).location = Place.Mine;
+                            Image newImage = GetPlayerById(e.User.Id).DisplayPlayer();
                         }
                         else
                         {
                             throw new Exception();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        e.Channel.SendMessage(ex.ToString());
+                        e.Channel.SendMessage("Invalid inputs or this player does not exist");
                     }
                 }
                 //Chop command
@@ -147,20 +130,11 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                        var parms = Regex.Split(e.Message.Text.Substring(6), " ");
-                        if (CheckIfPlayerExist(parms[0]))
+                        if (CheckIfPlayerExist(e.User.Id))
                         {
-                            Console.WriteLine("does that exist");
-                        }
-                        if (parms.Length != 1)
-                        {
-                            throw new Exception();
-                        }
-                        if (CheckIfPlayerExist(parms[0]))
-                        {
-                            GetPlayerByUserName(parms[0]).action = Action.WoodCutting;
-                            GetPlayerByUserName(parms[0]).location = Place.Forest;
-                            Image newImage = GetPlayerByUserName(parms[0]).DisplayPlayer();
+                            GetPlayerById(e.User.Id).action = Action.WoodCutting;
+                            GetPlayerById(e.User.Id).location = Place.Forest;
+                            Image newImage = GetPlayerById(e.User.Id).DisplayPlayer();
                         }
                         else
                         {
@@ -262,16 +236,16 @@ namespace MMORPGDiscordBot
                         }
                     }
                 }
-                newPlayer = new Player(userName,gender,Location.getLocationByString(location),playerImage,(float)Convert.ToDecimal(woodCutting),(float)Convert.ToDecimal(mining),ActionHelper.GetActionByString(action),(ulong)Convert.ToInt32(id));
+                newPlayer = new Player(userName,gender,Location.getLocationByString(location),playerImage,(float)Convert.ToDecimal(woodCutting),(float)Convert.ToDecimal(mining),ActionHelper.GetActionByString(action),(ulong)Convert.ToInt64(id));
                 newPlayer.inventory = playerInventory;
                 players.Add(newPlayer);
             }
         }
 
         //Display player stats
-        private void DisplayPlayerStats(string userName, MessageEventArgs e)
+        private void DisplayPlayerStats(MessageEventArgs e)
         {
-            Player player = GetPlayerByUserName(userName);
+            Player player = GetPlayerById(e.User.Id);
             e.Channel.SendMessage("```stats: \n"
                        + "UserName: " + player.userName + "\n"
                        + "Gender: " + player.gender + "\n"
@@ -279,7 +253,7 @@ namespace MMORPGDiscordBot
                        + "Woodcutting: " + player.woodCutting + "\n"
                        + "Mining: " + player.mining + "\n"
                        + "```");
-            e.Channel.SendFile(path + @"\MMORPGDicordBot\" + userName + @"\" + "PlayerPicture.png");
+            e.Channel.SendFile(path + @"\MMORPGDicordBot\" + GetPlayerById(e.User.Id).userName + @"\" + "PlayerPicture.png");
         }
 
         //Get player by user name
@@ -295,12 +269,25 @@ namespace MMORPGDiscordBot
             return null;
         }
 
-        //A function to check if a player already exists
-        private Boolean CheckIfPlayerExist(string userName)
+        //Get player by id
+        private Player GetPlayerById(ulong id)
         {
             foreach (Player player in players)
             {
-                if (player.userName == userName)
+                if(player.id == id)
+                {
+                    return player;
+                }
+            }
+            return null;
+        }
+
+        //A function to check if a player already exists
+        private Boolean CheckIfPlayerExist(ulong id)
+        {
+            foreach (Player player in players)
+            {
+                if (player.id == id)
                 {
                     return true;
                 }

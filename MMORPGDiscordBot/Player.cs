@@ -121,7 +121,7 @@ namespace MMORPGDiscordBot
             playerDic.Add("woodCutting", woodCutting.ToString());
             playerDic.Add("mining", mining.ToString());
             playerDic.Add("action", action.ToString());
-            playerDic.Add("playerId", id.ToString());
+            playerDic.Add("id", id.ToString());
             inventory.inventory.Clear();
             foreach (ItemObject item in inventory.inventory)
             {
