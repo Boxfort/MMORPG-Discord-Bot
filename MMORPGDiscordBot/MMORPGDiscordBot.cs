@@ -98,7 +98,7 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                            DisplayPlayerStats(e);
+                        DisplayPlayerStats(e);
                     }
                     catch (Exception)
                     {
@@ -209,8 +209,31 @@ namespace MMORPGDiscordBot
 
                     }
                 }
+                if (e.Message.Text.Contains("!attack"))
+                {
+                    try
+                    {
+                        var parms = Regex.Split(e.Message.Text.Substring(6), " ");
+                        if (parms.Length == 1)
+                        {
+                            if(GetPlayerByUserName(parms[0]) != null)
+                            {
+                                //TODO: Deal damage to players
+                                e.Channel.SendMessage(GetPlayerById(e.User.Id).userName + " attacks " + GetPlayerByUserName(parms[0]).userName);
+                            }
+                            else
+                            {
+                                e.Channel.SendMessage("This player does not exist!");
+                            }
+                        }
+                    }
+                    catch(Exception)
+                    {
+                        e.Channel.SendMessage("Invalid inputs.");
+                    }
             }
         }
+
         //Creates the new player
         private void CreateNewPlayer(MessageEventArgs e,String[] parms)
         {
