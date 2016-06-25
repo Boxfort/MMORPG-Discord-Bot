@@ -94,7 +94,18 @@ namespace MMORPGDiscordBot
                     }
                 }
                 //Display command
-                if (e.Message.Text.Contains("!display"))
+                if (e.Message.Text == ("!display"))
+                {
+                    try
+                    {
+                            DisplayPlayerStats(e);
+                    }
+                    catch (Exception)
+                    {
+                        e.Channel.SendMessage("Invalid inputs or this player does not exist");
+                    }
+                }
+                else if (e.Message.Text.Contains("!display"))
                 {
                     try
                     {
@@ -105,13 +116,13 @@ namespace MMORPGDiscordBot
                         }
                         else if (parms.Length == 1)
                         {
-                            DisplayPlayerStats(parms[0],e);
+                            DisplayPlayerStats(parms[0], e);
                         }
                         else
                         {
                             throw new Exception();
                         }
-                        
+
                     }
                     catch (Exception)
                     {
@@ -161,16 +172,43 @@ namespace MMORPGDiscordBot
                     }
                 }
                 //Move command
-                if(e.Message.Text.Contains("!move"))
+                if (e.Message.Text.Contains("!move"))
                 {
                     try
                     {
-
+                        var parms = Regex.Split(e.Message.Text.Substring(6), " ");
+                        if (parms.Length == 1)
+                        {
+                            if (CheckIfPlayerExist(e.User.Id))
+                            {
+                                if (parms[0].ToLower().Contains("forest"))
+                                {
+                                    GetPlayerById(e.User.Id).action = Action.Nothing;
+                                    GetPlayerById(e.User.Id).location = Place.Forest;
+                                }
+                                else if (parms[0].ToLower().Contains("mine"))
+                                {
+                                    GetPlayerById(e.User.Id).action = Action.Nothing;
+                                    GetPlayerById(e.User.Id).location = Place.Mine;
+                                }
+                                else if (parms[0].ToLower().Contains("town"))
+                                {
+                                    GetPlayerById(e.User.Id).action = Action.Nothing;
+                                    GetPlayerById(e.User.Id).location = Place.Town;
+                                }
+                                Image newImage = GetPlayerById(e.User.Id).DisplayPlayer();
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
                     }
-                    catch
+                    catch (Exception)
                     {
 
                     }
+                }
             }
         }
         //Creates the new player
