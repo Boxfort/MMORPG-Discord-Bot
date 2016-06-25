@@ -97,7 +97,20 @@ namespace MMORPGDiscordBot
                 {
                     try
                     {
-                        DisplayPlayerStats(e);
+                        var parms = Regex.Split(e.Message.Text.Substring(8), " ");
+                        if (parms.Length == 0)
+                        {
+                            DisplayPlayerStats(e);
+                        }
+                        else if (parms.Length == 1)
+                        {
+                            DisplayPlayerStats(parms[0],e);
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
+                        
                     }
                     catch (Exception)
                     {
@@ -242,7 +255,7 @@ namespace MMORPGDiscordBot
             }
         }
 
-        //Display player stats
+        //Display player stats for single user
         private void DisplayPlayerStats(MessageEventArgs e)
         {
             Player player = GetPlayerById(e.User.Id);
@@ -254,6 +267,19 @@ namespace MMORPGDiscordBot
                        + "Mining: " + player.mining + "\n"
                        + "```");
             e.Channel.SendFile(path + @"\MMORPGDicordBot\" + GetPlayerById(e.User.Id).userName + @"\" + "PlayerPicture.png");
+        }
+        //Display player stats for another user
+        private void DisplayPlayerStats(string userName, MessageEventArgs e)
+        {
+            Player player = GetPlayerByUserName(userName);
+            e.Channel.SendMessage("```stats: \n"
+                       + "UserName: " + player.userName + "\n"
+                       + "Gender: " + player.gender + "\n"
+                       + "Location: " + player.location + "\n"
+                       + "Woodcutting: " + player.woodCutting + "\n"
+                       + "Mining: " + player.mining + "\n"
+                       + "```");
+            e.Channel.SendFile(path + @"\MMORPGDicordBot\" + userName + @"\" + "PlayerPicture.png");
         }
 
         //Get player by user name
